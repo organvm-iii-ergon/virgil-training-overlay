@@ -27,13 +27,20 @@ func getSanitizedAppName(_ name: String?) -> String {
 
     // Security: Remove control characters using Foundation-optimized routines
     let truncatedString = String(truncated)
-    let sanitized = truncatedString
-        .components(separatedBy: CharacterSet.controlCharacters)
-        .joined()
 
-    if !CharacterSet.controlCharacters.contains(scalar) {
-        result.unicodeScalars.append(scalar)
+    // Performance: Filter unicode scalars directly to avoid overhead of splitting and joining strings.
+    // This reduces memory allocation and improves CPU efficiency for sanitization.
+    var result = ""
+    result.reserveCapacity(truncatedString.unicodeScalars.count)
+
+    for scalar in truncatedString.unicodeScalars {
+        if !CharacterSet.controlCharacters.contains(scalar) {
+            result.append(Character(scalar))
+        }
     }
+
+    return result
+}
 // MARK: - State
 
 var lastPrintedName = ""
