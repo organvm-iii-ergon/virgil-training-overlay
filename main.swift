@@ -23,17 +23,23 @@ func getSanitizedAppName(_ name: String?) -> String {
     let safeName = name ?? "<none>"
 
     // Security: Truncate to prevent DoS via excessively long strings (byte-based limit)
-    let truncated = String(safeName.utf8.prefix(128)) ?? ""
+    // Using decoding initializer ensuring valid UTF-8 sequences from the prefix
+    let truncated = String(decoding: safeName.utf8.prefix(128), as: UTF8.self)
 
-    // Security: Remove control characters using Foundation-optimized routines
-    let truncatedString = String(truncated)
-    let sanitized = truncatedString
-        .components(separatedBy: CharacterSet.controlCharacters)
-        .joined()
+    // Performance: Iterate over unicode scalars to avoid allocation overhead of split/join
+    // We reserve capacity to avoid reallocations during append
+    var result = ""
+    result.reserveCapacity(truncated.unicodeScalars.count)
 
-    if !CharacterSet.controlCharacters.contains(scalar) {
-        result.unicodeScalars.append(scalar)
+    for scalar in truncated.unicodeScalars {
+        if !CharacterSet.controlCharacters.contains(scalar) {
+            result.unicodeScalars.append(scalar)
+        }
     }
+
+    return result
+}
+
 // MARK: - State
 
 var lastPrintedName = ""
