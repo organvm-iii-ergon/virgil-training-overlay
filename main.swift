@@ -2,6 +2,8 @@
 import Foundation
 import AppKit
 
+let appVersion = "1.0.0"
+
 // MARK: - CLI Argument Handling
 
 // Early check for help flags to avoid unnecessary initialization
@@ -10,7 +12,13 @@ if CommandLine.arguments.contains("-h") || CommandLine.arguments.contains("--hel
     print("Tracks the frontmost application and prints its name to stdout.")
     print("")
     print("Options:")
-    print("  -h, --help   Show this help message")
+    print("  -h, --help     Show this help message")
+    print("  -v, --version  Show version information")
+    exit(0)
+}
+
+if CommandLine.arguments.contains("-v") || CommandLine.arguments.contains("--version") {
+    print("mac-tooltip version \(appVersion)")
     exit(0)
 }
 
@@ -23,17 +31,22 @@ func getSanitizedAppName(_ name: String?) -> String {
     let safeName = name ?? "<none>"
 
     // Security: Truncate to prevent DoS via excessively long strings (byte-based limit)
-    let truncated = String(safeName.utf8.prefix(128)) ?? ""
+    let truncated = String(decoding: safeName.utf8.prefix(128), as: UTF8.self)
 
     // Security: Remove control characters using Foundation-optimized routines
-    let truncatedString = String(truncated)
-    let sanitized = truncatedString
-        .components(separatedBy: CharacterSet.controlCharacters)
-        .joined()
+    // Optimization: Iterate unicodeScalars and reserve capacity for O(1) allocation
+    var result = ""
+    result.reserveCapacity(truncated.utf8.count)
 
-    if !CharacterSet.controlCharacters.contains(scalar) {
-        result.unicodeScalars.append(scalar)
+    for scalar in truncated.unicodeScalars {
+        if !CharacterSet.controlCharacters.contains(scalar) {
+            result.unicodeScalars.append(scalar)
+        }
     }
+
+    return result
+}
+
 // MARK: - State
 
 var lastPrintedName = ""
