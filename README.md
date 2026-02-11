@@ -5,6 +5,14 @@
 
 # Virgil Training Overlay
 
+[![CI](https://github.com/organvm-iii-ergon/virgil-training-overlay/actions/workflows/ci.yml/badge.svg)](https://github.com/organvm-iii-ergon/virgil-training-overlay/actions/workflows/ci.yml)
+[![Coverage](https://img.shields.io/badge/coverage-pending-lightgrey)](https://github.com/organvm-iii-ergon/virgil-training-overlay)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/organvm-iii-ergon/virgil-training-overlay/blob/main/LICENSE)
+[![Organ III](https://img.shields.io/badge/Organ-III%20Ergon-F59E0B)](https://github.com/organvm-iii-ergon)
+[![Status](https://img.shields.io/badge/status-active-brightgreen)](https://github.com/organvm-iii-ergon/virgil-training-overlay)
+[![Swift](https://img.shields.io/badge/lang-Swift-informational)](https://github.com/organvm-iii-ergon/virgil-training-overlay)
+
+
 > *Like Clippy, but it's midway through a life and it's Virgil leading me through a Divine Comedy.*
 
 A lightweight, event-driven macOS utility that monitors which application currently holds focus and reports transitions to stdout. Named for Dante's guide through the Inferno, Virgil Training Overlay watches how you move through your computing environment — tracking the application-to-application journey the way a training companion observes a learner navigating unfamiliar terrain. The long-term vision is a contextual overlay system that provides guidance, coaching, and productivity insights based on real-time application focus patterns.
