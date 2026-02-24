@@ -1,0 +1,23 @@
+# seed.yaml — Automation Contract for organvm-iii-ergon/virgil-training-overlay
+# Schema: seed/v1.0
+# Generated: 2026-02-24 (IGNITION Sprint)
+
+schema_version: '1.0'
+organ: III
+organ_name: Commerce
+repo: virgil-training-overlay
+org: organvm-iii-ergon
+metadata:
+  implementation_status: ARCHIVED
+  tier: archive
+  promotion_status: ARCHIVED
+  last_validated: '2026-02-13'
+  generated: '2026-02-24'
+  sprint: IGNITION
+agents:
+- name: ci
+  trigger: on_push
+  workflow: .github/workflows/ci-minimal.yml
+  description: Continuous integration pipeline
+consumes: []
+subscriptions: []
