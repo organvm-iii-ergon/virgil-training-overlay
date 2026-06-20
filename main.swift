@@ -26,14 +26,18 @@ func getSanitizedAppName(_ name: String?) -> String {
     let truncated = String(safeName.utf8.prefix(128)) ?? ""
 
     // Security: Remove control characters using Foundation-optimized routines
-    let truncatedString = String(truncated)
-    let sanitized = truncatedString
-        .components(separatedBy: CharacterSet.controlCharacters)
-        .joined()
+    // Filter unicodeScalars to avoid allocation overhead of components(separatedBy:)
+    var result = ""
+    result.reserveCapacity(truncated.unicodeScalars.count)
 
-    if !CharacterSet.controlCharacters.contains(scalar) {
-        result.unicodeScalars.append(scalar)
+    for scalar in truncated.unicodeScalars {
+        if !CharacterSet.controlCharacters.contains(scalar) {
+            result.append(Character(scalar))
+        }
     }
+
+    return result
+}
 // MARK: - State
 
 var lastPrintedName = ""
