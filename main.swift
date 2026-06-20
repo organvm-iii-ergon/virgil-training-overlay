@@ -2,7 +2,17 @@
 import Foundation
 import AppKit
 
+// MARK: - Constants
+
+let appVersion = "1.0.0"
+
 // MARK: - CLI Argument Handling
+
+// Early check for version flags
+if CommandLine.arguments.contains("-v") || CommandLine.arguments.contains("--version") {
+    print("mac-tooltip \(appVersion)")
+    exit(0)
+}
 
 // Early check for help flags to avoid unnecessary initialization
 if CommandLine.arguments.contains("-h") || CommandLine.arguments.contains("--help") {
@@ -10,7 +20,8 @@ if CommandLine.arguments.contains("-h") || CommandLine.arguments.contains("--hel
     print("Tracks the frontmost application and prints its name to stdout.")
     print("")
     print("Options:")
-    print("  -h, --help   Show this help message")
+    print("  -h, --help     Show this help message")
+    print("  -v, --version  Show version information")
     exit(0)
 }
 
@@ -31,9 +42,8 @@ func getSanitizedAppName(_ name: String?) -> String {
         .components(separatedBy: CharacterSet.controlCharacters)
         .joined()
 
-    if !CharacterSet.controlCharacters.contains(scalar) {
-        result.unicodeScalars.append(scalar)
-    }
+    return sanitized
+}
 // MARK: - State
 
 var lastPrintedName = ""
