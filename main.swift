@@ -53,6 +53,16 @@ func handleFocusChange(_ rawName: String?) {
 
 // MARK: - Main Logic
 
+// UX: Check for help flags early to provide immediate guidance without spinning up AppKit.
+if CommandLine.arguments.contains("-h") || CommandLine.arguments.contains("--help") {
+    print("Usage: mac-tooltip")
+    print("Monitors the frontmost application and prints its name when it changes.")
+    print("")
+    print("Options:")
+    print("  -h, --help  Show this help message")
+    exit(0)
+}
+
 // Performance: We switched from a polling Timer to NSWorkspace notifications.
 // This event-driven approach significantly reduces CPU usage and battery drain
 // by only waking up the process when the active application actually changes.
