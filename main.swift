@@ -53,6 +53,15 @@ func handleFocusChange(_ rawName: String?) {
 
 // MARK: - Main Logic
 
+if CommandLine.arguments.contains("-h") || CommandLine.arguments.contains("--help") {
+    Swift.print("Usage: mac-tooltip")
+    Swift.print("Tracks the frontmost application and prints updates to stdout.")
+    Swift.print("")
+    Swift.print("Options:")
+    Swift.print("  -h, --help   Show this help message")
+    exit(0)
+}
+
 // Performance: We switched from a polling Timer to NSWorkspace notifications.
 // This event-driven approach significantly reduces CPU usage and battery drain
 // by only waking up the process when the active application actually changes.
