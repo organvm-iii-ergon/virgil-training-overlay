@@ -10,7 +10,13 @@ if CommandLine.arguments.contains("-h") || CommandLine.arguments.contains("--hel
     print("Tracks the frontmost application and prints its name to stdout.")
     print("")
     print("Options:")
-    print("  -h, --help   Show this help message")
+    print("  -h, --help      Show this help message")
+    print("  -v, --version   Show version information")
+    exit(0)
+}
+
+if CommandLine.arguments.contains("-v") || CommandLine.arguments.contains("--version") {
+    print("mac-tooltip v1.0.0")
     exit(0)
 }
 
@@ -25,15 +31,21 @@ func getSanitizedAppName(_ name: String?) -> String {
     // Security: Truncate to prevent DoS via excessively long strings (byte-based limit)
     let truncated = String(safeName.utf8.prefix(128)) ?? ""
 
-    // Security: Remove control characters using Foundation-optimized routines
-    let truncatedString = String(truncated)
-    let sanitized = truncatedString
-        .components(separatedBy: CharacterSet.controlCharacters)
-        .joined()
+    // Security: Remove control characters by iterating over scalars
+    // This approach is more performant than components(separatedBy:).joined()
+    // and correctly handles Unicode scalars.
+    var result = ""
+    result.reserveCapacity(truncated.unicodeScalars.count)
 
-    if !CharacterSet.controlCharacters.contains(scalar) {
-        result.unicodeScalars.append(scalar)
+    for scalar in truncated.unicodeScalars {
+        if !CharacterSet.controlCharacters.contains(scalar) {
+            result.append(Character(scalar))
+        }
     }
+
+    return result
+}
+
 // MARK: - State
 
 var lastPrintedName = ""
