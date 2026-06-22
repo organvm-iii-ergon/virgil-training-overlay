@@ -6,25 +6,21 @@ import MacTooltipCore
 // MARK: - CLI Argument Handling
 
 // Early check for help flags to avoid unnecessary initialization.
-if CommandLine.arguments.contains("-h") || CommandLine.arguments.contains("--help") {
-    print("Usage: mac-tooltip")
-    print("Tracks the frontmost application and prints its name to stdout.")
-    print("")
-    print("Options:")
-    print("  -h, --help   Show this help message")
+if isHelpRequested(in: CommandLine.arguments) {
+    print(macTooltipHelpText)
     exit(0)
 }
 
 // MARK: - State
 
-var focusTracker = FocusChangeTracker()
+var focusReporter = FocusChangeReporter { line in
+    Swift.print(line)
+}
 
 /// Prints the new focus application name if it has changed.
 /// - Parameter rawName: The raw name of the application.
 func handleFocusChange(_ rawName: String?) {
-    if let line = focusTracker.line(for: rawName) {
-        Swift.print(line)
-    }
+    focusReporter.handleFocusChange(rawName)
 }
 
 // MARK: - Main Logic
