@@ -21,6 +21,25 @@ public func isVersionRequested(in arguments: [String]) -> Bool {
     arguments.contains("-v") || arguments.contains("--version")
 }
 
+/// Formats a `[HH:mm:ss]` timestamp prefix for a real-time focus log line.
+///
+/// The timestamp is a presentation concern layered on top of the deduplicated
+/// focus line, so it never participates in change detection. `timeZone` is
+/// injectable purely to keep the formatting deterministic under test; the CLI
+/// uses the current time zone.
+public func focusTimestamp(for date: Date, timeZone: TimeZone = .current) -> String {
+    let formatter = DateFormatter()
+    formatter.locale = Locale(identifier: "en_US_POSIX")
+    formatter.timeZone = timeZone
+    formatter.dateFormat = "HH:mm:ss"
+    return "[\(formatter.string(from: date))]"
+}
+
+/// Prefixes a focus line with a `[HH:mm:ss]` timestamp for log context.
+public func timestampedFocusLine(_ line: String, at date: Date, timeZone: TimeZone = .current) -> String {
+    "\(focusTimestamp(for: date, timeZone: timeZone)) \(line)"
+}
+
 public struct FocusChangeReporter {
     private var tracker: FocusChangeTracker
     private let writeLine: (String) -> Void

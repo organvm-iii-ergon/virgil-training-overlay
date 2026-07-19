@@ -21,6 +21,20 @@ final class CommandLineSupportTests: XCTestCase {
         XCTAssertFalse(macTooltipVersion.isEmpty)
     }
 
+    func testFocusTimestampFormatsFixedInstantDeterministically() {
+        // 2024-10-25T13:04:09Z -> "[13:04:09]" in UTC
+        let instant = Date(timeIntervalSince1970: 1_729_861_449)
+        XCTAssertEqual(focusTimestamp(for: instant, timeZone: TimeZone(identifier: "UTC")!), "[13:04:09]")
+    }
+
+    func testTimestampedFocusLinePrefixesWithoutMutatingLine() {
+        let instant = Date(timeIntervalSince1970: 1_729_861_449)
+        XCTAssertEqual(
+            timestampedFocusLine("New focus: Safari", at: instant, timeZone: TimeZone(identifier: "UTC")!),
+            "[13:04:09] New focus: Safari"
+        )
+    }
+
     func testHelpTextPreservesCliOutputContract() {
         XCTAssertEqual(
             macTooltipHelpText,
