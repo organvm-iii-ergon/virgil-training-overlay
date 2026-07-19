@@ -9,6 +9,18 @@ final class CommandLineSupportTests: XCTestCase {
         XCTAssertTrue(isHelpRequested(in: ["--help", "mac-tooltip"]))
     }
 
+    func testVersionFlagDetectionRecognizesSupportedFlagsAnywhereInArguments() {
+        XCTAssertFalse(isVersionRequested(in: ["mac-tooltip"]))
+        XCTAssertTrue(isVersionRequested(in: ["mac-tooltip", "-v"]))
+        XCTAssertTrue(isVersionRequested(in: ["mac-tooltip", "--version"]))
+        XCTAssertTrue(isVersionRequested(in: ["--version", "mac-tooltip"]))
+    }
+
+    func testVersionTextReportsSemanticVersion() {
+        XCTAssertEqual(macTooltipVersionText, "mac-tooltip version \(macTooltipVersion)")
+        XCTAssertFalse(macTooltipVersion.isEmpty)
+    }
+
     func testHelpTextPreservesCliOutputContract() {
         XCTAssertEqual(
             macTooltipHelpText,
@@ -17,7 +29,8 @@ final class CommandLineSupportTests: XCTestCase {
             Tracks the frontmost application and prints its name to stdout.
 
             Options:
-              -h, --help   Show this help message
+              -h, --help      Show this help message
+              -v, --version   Show version information
             """
         )
     }
