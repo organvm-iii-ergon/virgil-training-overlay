@@ -19,7 +19,7 @@ if isVersionRequested(in: CommandLine.arguments) {
 // MARK: - State
 
 var focusReporter = FocusChangeReporter { line in
-    Swift.print(line)
+    Swift.print(timestampedFocusLine(line, at: Date()))
 }
 
 /// Prints the new focus application name if it has changed.
