@@ -1,15 +1,24 @@
 import Foundation
 
+public let macTooltipVersion = "1.0.0"
+
+public let macTooltipVersionText = "mac-tooltip version \(macTooltipVersion)"
+
 public let macTooltipHelpText = """
 Usage: mac-tooltip
 Tracks the frontmost application and prints its name to stdout.
 
 Options:
-  -h, --help   Show this help message
+  -h, --help      Show this help message
+  -v, --version   Show version information
 """
 
 public func isHelpRequested(in arguments: [String]) -> Bool {
     arguments.contains("-h") || arguments.contains("--help")
+}
+
+public func isVersionRequested(in arguments: [String]) -> Bool {
+    arguments.contains("-v") || arguments.contains("--version")
 }
 
 public struct FocusChangeReporter {

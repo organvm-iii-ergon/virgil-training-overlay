@@ -11,6 +11,11 @@ if isHelpRequested(in: CommandLine.arguments) {
     exit(0)
 }
 
+if isVersionRequested(in: CommandLine.arguments) {
+    print(macTooltipVersionText)
+    exit(0)
+}
+
 // MARK: - State
 
 var focusReporter = FocusChangeReporter { line in
